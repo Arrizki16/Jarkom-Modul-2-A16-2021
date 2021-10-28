@@ -134,15 +134,6 @@ RewriteRule (.*)franky(.*) http://super.franky.A16.com/public/images/franky.png
 
 htpasswd -c -b /var/www/general.franky.A16.com/.htpasswd luffy onepiece
 
-touch /var/www/franky.A16.com/.htaccess
-
-echo '
-RewriteEngine On
-RewriteBase /
-RewriteCond %{HTTP_HOST} ^10\.7\.2\.4$
-RewriteRule ^(.*)$ http://franky.A16.com/$1 [L,R=301]
-' > /var/www/franky.A16.com/.htaccess
-
 touch /var/www/general.franky.A16.com/.htaccess
 
 echo '
@@ -180,7 +171,3 @@ echo '
 
 service apache2 restart
 
-:'
-pengecualian untuk no 17 jika akan run harus non aktifkan dulu conf
-di 000-default.conf dengan a2dissite 000-default.conf kemudian baru aktifkan
-super.franky.A16.com.conf a2ensite super.franky.A16.com.conf'
