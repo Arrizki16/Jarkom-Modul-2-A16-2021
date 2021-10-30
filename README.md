@@ -29,9 +29,9 @@ iface eth2 inet static
 ```
 auto eth0
 iface eth0 inet static
-	address [Prefix IP].1.2
+	address 10.7.1.2
 	netmask 255.255.255.0
-	gateway [Prefix IP].1.1
+	gateway 10.7.1.1
 ```
 * Alabasta
 ```
