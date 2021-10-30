@@ -6,19 +6,13 @@ nameserver 192.168.122.1
 ' > /etc/resolv.conf
 
 apt-get update
-
 apt-get install php -y
-
 apt-get install apache2 -y
-
 apt-get install git -y
-
 apt-get install unzip -y
-
 apt-get install ca-certificates -y
-
 apt-get install lynx -y
-
+apt-get install libapache2-mod-php7.0 -y
 service apache2 start
 
 git clone https://github.com/FeinardSlim/Praktikum-Modul-2-Jarkom.git /var/www/source
@@ -37,7 +31,7 @@ cp -r /var/www/source/general.mecha.franky/. /var/www/general.franky.A16.com
 
 rm -r /var/www/source
 
-apt-get install libapache2-mod-php7.0 -y
+
 service apache2 restart
 
 echo '
@@ -64,6 +58,14 @@ echo '
         	Options +Indexes
         </Directory>
 
+        <Directory /var/www/super.franky.A16.com/public/css/*>
+                Options -Indexes
+        </Directory>
+
+        <Directory /var/www/super.franky.A16.com/public/js/*>
+                Options -Indexes
+        </Directory>
+
         <Directory /var/www/super.franky.A16.com>
                 Options +FollowSymLinks -Multiviews
                 AllowOverride All
@@ -72,7 +74,7 @@ echo '
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
 
-        </VirtualHost>
+</VirtualHost>
 
 <VirtualHost *:15000 *:15500>
         ServerAdmin webmaster@localhost
@@ -129,10 +131,19 @@ ErrorDocument 404 /error/404.html
 RewriteEngine On
 RewriteBase /var/www/super.franky.A16.com/public/images/
 RewriteCond %{REQUEST_FILENAME} !franky.png
-RewriteRule (.*)franky(.*) http://super.franky.A16.com/public/images/franky.png
+RewriteRule ^public/images/.*franky.*/png$ public/images/franky.png
 ' > /var/www/super.franky.A16.com/.htaccess
 
 htpasswd -c -b /var/www/general.franky.A16.com/.htpasswd luffy onepiece
+
+touch /var/www/franky.A16.com/.htaccess
+
+echo '
+RewriteEngine On
+RewriteBase /
+RewriteCond %{HTTP_HOST} ^10\.7\.2\.4$
+RewriteRule ^(.*)$ http://franky.A16.com/$1 [L,R=301]
+' > /var/www/franky.A16.com/.htaccess
 
 touch /var/www/general.franky.A16.com/.htaccess
 
@@ -153,21 +164,4 @@ a2enmod rewrite
 
 touch /etc/apache2/sites-available/super.franky.A16.com.conf
 
-echo '
-<VirtualHost *:80>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/super.franky.A16.com
-        ServerName www.super.franky.A16.com
-
-        <Directory /var/www/super.franky.A16.com>
-                Options +FollowSymLinks -Multiviews
-                AllowOverride All
-        </Directory>
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-' > /etc/apache2/sites-available/super.franky.A16.com.conf
-
 service apache2 restart
-
