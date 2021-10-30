@@ -5,8 +5,6 @@ Lapres Praktikum Jarkom Modul 2
 * [**Cara Pengerjaan**](#cara-pengerjaan)
 * [**Kendala**](#kendala)
 
-### Konfigurasi IP
-
 ## Cara Pengerjaan
 ### Nomor 1
 EniesLobby akan dijadikan sebagai DNS Master, Water7 akan dijadikan DNS Slave, dan Skypie akan digunakan sebagai Web Server. Terdapat 2 Client yaitu Loguetown, dan Alabasta. Semua node terhubung pada router Foosha, sehingga dapat mengakses internet  
