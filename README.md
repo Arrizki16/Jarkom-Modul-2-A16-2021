@@ -66,6 +66,12 @@ iface eth0 inet static
 	netmask 255.255.255.0
 	gateway 10.7.2.1
 ```
+**Requirement di router**
+* ketikkan perintah dibawah untuk dapat terhubung ke internet
+```
+apt-get update
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.7.0.0/16
+```
 **Requirement di client**
 * install dnsutils dan lynx
 ```
@@ -76,6 +82,28 @@ apt-get install lynx -y
 * ubah nameserver kembali ke ip enieslobby pada ```/etc/resolv.conf```
 ```
 nameserver 10.7.2.2
+```
+**Requirement di dns server**
+* install bind9
+```
+apt-get update
+apt-get install bind9 -y
+```
+* ubah nameserver ke foosha
+```
+nameserver 192.168.122.1 
+```
+**Requirement di web server**
+* install beberapa tools yang akan dibutuhkan dalam pengerjaan soal
+```
+apt-get update
+apt-get install php -y
+apt-get install apache2 -y
+apt-get install git -y
+apt-get install unzip -y
+apt-get install ca-certificates -y
+apt-get install lynx -y
+ apt-get install libapache2-mod-php7.0 -y
 ```
 ### Nomor 2
 Luffy ingin menghubungi Franky yang berada di EniesLobby dengan denden mushi. Kalian diminta Luffy untuk membuat website utama dengan mengakses franky.yyy.com dengan alias www.franky.yyy.com pada folder kaizoku  
@@ -219,23 +247,106 @@ Untuk memperlancar komunikasi Luffy dan rekannya, dibuatkan subdomain melalui Wa
 general         IN      A       10.7.2.4        ; IP Skypie
 www.general     IN      CNAME   mecha.franky.A16.com.
 ```
+
 ### Nomor 8
 Setelah melakukan konfigurasi server, maka dilakukan konfigurasi Webserver. Pertama dengan webserver www.franky.yyy.com. Pertama, luffy membutuhkan webserver dengan DocumentRoot pada /var/www/franky.yyy.com.  
+* lakukan persiapan file dan folder yang akan diperlukan pada pengerjaan soal
 ```
-
+git clone https://github.com/FeinardSlim/Praktikum-Modul-2-Jarkom.git /var/www/source
+rm /var/www/source/README.md
+unzip /var/www/source/franky.zip -d /var/www/source
+unzip /var/www/source/general.mecha.franky.zip -d /var/www/source
+unzip /var/www/source/super.franky.zip -d /var/www/source
+mkdir /var/www/franky.A16.com
+mkdir /var/www/super.franky.A16.com
+mkdir /var/www/general.franky.A16.com
+cp -r /var/www/source/franky/. /var/www/franky.A16.com
+cp -r /var/www/source/super.franky/. /var/www/super.franky.A16.com
+cp -r /var/www/source/general.mecha.franky/. /var/www/general.franky.A16.com
+rm -r /var/www/source
+```
+* buat dan tambahkan konfigurasi pada ```/etc/apache2/sites-available/000-default.conf``` di Skypie
+```
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/franky.A16.com
+        ServerName www.franky.A16.com
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
 ```
 ### Nomor 9
 Setelah itu, Luffy juga membutuhkan agar url www.franky.yyy.com/index.php/home dapat menjadi menjadi www.franky.yyy.com/home.  
+* tambahkan konfigurasi pada ```/etc/apache2/sites-available/000-default.conf``` di Skypie
+```
+        Alias "/home" "/var/www/franky.A16.com/index.php/home"
+```
 ### Nomor 10
-Setelah itu, pada subdomain www.super.franky.yyy.com, Luffy membutuhkan penyimpanan aset yang memiliki DocumentRoot pada /var/www/super.franky.yyy.com  
+Setelah itu, pada subdomain www.super.franky.yyy.com, Luffy membutuhkan penyimpanan aset yang memiliki DocumentRoot pada /var/www/super.franky.yyy.com 
+* tambahkan konfigurasi pada ```/etc/apache2/sites-available/000-default.conf``` di Skypie
+```
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/super.franky.A16.com
+        ServerName www.super.franky.A16.com
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+```
 ### Nomor 11
 Akan tetapi, pada folder /public, Luffy ingin hanya dapat melakukan directory listing saja  
+* tambahkan konfigurasi pada ```/etc/apache2/sites-available/000-default.conf``` di Skypie
+```
+        <Directory /var/www/super.franky.A16.com/public>
+        	Options +Indexes
+        </Directory>
+
+        <Directory /var/www/super.franky.A16.com/public/css/*>
+                Options -Indexes
+        </Directory>
+
+        <Directory /var/www/super.franky.A16.com/public/js/*>
+                Options -Indexes
+        </Directory>
+```
 ### Nomor 12
 Tidak hanya itu, Luffy juga menyiapkan error file 404.html pada folder /error untuk mengganti error kode pada apache  
+* tambahkan konfigurasi pada ```/etc/apache2/sites-available/000-default.conf``` di Skypie
+```
+	<Directory /var/www/super.franky.A16.com>
+                Options +FollowSymLinks -Multiviews
+                AllowOverride All
+        </Directory>
+```
+* kemudian buat file .htaccess pada ```/var/www/super.franky.A16.com``` dan isi dengan konfigurasi berikut
+```
+ErrorDocument 404 /error/404.html
+```
 ### Nomor 13
 Luffy juga meminta Nami untuk dibuatkan konfigurasi virtual host. Virtual host ini bertujuan untuk dapat mengakses file asset www.super.franky.yyy.com/public/js menjadi www.super.franky.yyy.com/js.  
+* tambahkan konfigurasi pada ```/etc/apache2/sites-available/000-default.conf``` di Skypie
+```
+	Alias "/js" "/var/www/super.franky.A16.com/public/js" 
+```
 ### Nomor 14
 Dan Luffy meminta untuk web www.general.mecha.franky.yyy.com hanya bisa diakses dengan port 15000 dan port 15500  
+* tambahkan konfigurasi pada ```/etc/apache2/sites-available/000-default.conf``` di Skypie
+```
+<VirtualHost *:15000 *:15500>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/general.franky.A16.com
+        ServerName www.general.mecha.franky.A16.com
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+```
+* aktifkan port 15000 dan 15500 pada ```/etc/apache2/ports.conf``` dan tambahkan konfigurasi berikut
+```
+Listen 15000
+Listen 15500
+```
 ### Nomor 15
 dengan autentikasi username luffy dan password onepiece dan file di /var/www/general.mecha.franky.yyy  
 ### Nomor 16
