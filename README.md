@@ -4,6 +4,7 @@ kelompok A16 : Deka Julian Arrizki
 
 ## **Konten**
 * [**Cara Pengerjaan**](#cara-pengerjaan)
+* [**Catatan**](#catatan)
 * [**Kendala**](#kendala)
 
 ## Cara Pengerjaan
@@ -414,3 +415,4 @@ service bind9 restart
 a2enmod rewrite
 ```
 ## Kendala
+1. No 17 kesulitan dalam membuat regexnya :)
