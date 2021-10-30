@@ -1,5 +1,6 @@
 # Jarkom-Modul-2-A16-2021
-Lapres Praktikum Jarkom Modul 2
+Lapres Praktikum Jarkom Modul 2  
+kelompok A16 : Deka Julian Arrizki
 
 ## **Konten**
 * [**Cara Pengerjaan**](#cara-pengerjaan)
@@ -181,10 +182,48 @@ options {
         listen-on-v6 { any; };
 };
 ```
+* tambahkan konfigurasi pada ```/etc/bind/kaizoku/franky.A16.com``` di enieslobby
+```
+ns1                     IN      A       10.7.2.4        ; IP Skypie
+mencha                  IN      NS      ns1
+```
+* buat dan tambahkan konfigurasi pada ```/etc/bind/sunnygo/mecha.franky.A16.com``` di Water7
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA  mecha.franky.A16.com. root.mecha.franky.A16.com. (
+                     2021102501             ; Serial
+                         604800             ; Refresh
+                          86400             ; Retry
+                        2419200             ; Expire
+                         604800 )           ; Negative Cache TTL
+;
+@               IN      NS      mecha.franky.A16.com.
+@               IN      A       10.7.2.4        ; IP Skypie
+mecha           IN      A       10.7.2.4        ; IP Skypie
+www             IN      CNAME   mecha.franky.A16.com.
+```
+* tambahkan konfigurasi pada ```/etc/bind/named.conf.local```
+```
+zone "mecha.franky.A16.com" {
+    type master;
+    file "/etc/bind/sunnygo/mecha.franky.A16.com";
+};
+```
 ### Nomor 7
 Untuk memperlancar komunikasi Luffy dan rekannya, dibuatkan subdomain melalui Water7 dengan nama general.mecha.franky.yyy.com dengan alias www.general.mecha.franky.yyy.com yang mengarah ke Skypie  
+* buka dan tambahkan konfigurasi pada ```/etc/bind/sunnygo/mecha.franky.A16.com``` di Water7
+```
+general         IN      A       10.7.2.4        ; IP Skypie
+www.general     IN      CNAME   mecha.franky.A16.com.
+```
 ### Nomor 8
 Setelah melakukan konfigurasi server, maka dilakukan konfigurasi Webserver. Pertama dengan webserver www.franky.yyy.com. Pertama, luffy membutuhkan webserver dengan DocumentRoot pada /var/www/franky.yyy.com.  
+```
+
+```
 ### Nomor 9
 Setelah itu, Luffy juga membutuhkan agar url www.franky.yyy.com/index.php/home dapat menjadi menjadi www.franky.yyy.com/home.  
 ### Nomor 10
