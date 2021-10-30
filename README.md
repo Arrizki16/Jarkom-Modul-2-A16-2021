@@ -8,6 +8,63 @@ Lapres Praktikum Jarkom Modul 2
 ## Cara Pengerjaan
 ### Nomor 1
 EniesLobby akan dijadikan sebagai DNS Master, Water7 akan dijadikan DNS Slave, dan Skypie akan digunakan sebagai Web Server. Terdapat 2 Client yaitu Loguetown, dan Alabasta. Semua node terhubung pada router Foosha, sehingga dapat mengakses internet  
+
+**Konfigurasi Ip Address**
+* Foosha
+```
+auto eth0
+iface eth0 inet dhcp
+
+auto eth1
+iface eth1 inet static
+	address 10.7.1.1
+	netmask 255.255.255.0
+
+auto eth2
+iface eth2 inet static
+	address 10.7.2.1
+	netmask 255.255.255.0
+```
+* Loguetown
+```
+auto eth0
+iface eth0 inet static
+	address [Prefix IP].1.2
+	netmask 255.255.255.0
+	gateway [Prefix IP].1.1
+```
+* Alabasta
+```
+auto eth0
+iface eth0 inet static
+	address 10.7.1.3
+	netmask 255.255.255.0
+	gateway 10.7.1.1
+```
+* Enieslobby
+```
+auto eth0
+iface eth0 inet static
+	address 10.7.2.2
+	netmask 255.255.255.0
+	gateway 10.7.2.1
+```
+* Water7
+```
+auto eth0
+iface eth0 inet static
+	address 10.7.2.3
+	netmask 255.255.255.0
+	gateway 10.7.2.1
+```
+* Skypie
+```
+auto eth0
+iface eth0 inet static
+	address 10.7.2.4
+	netmask 255.255.255.0
+	gateway 10.7.2.1
+```
 ### Nomor 2
 Luffy ingin menghubungi Franky yang berada di EniesLobby dengan denden mushi. Kalian diminta Luffy untuk membuat website utama dengan mengakses franky.yyy.com dengan alias www.franky.yyy.com pada folder kaizoku  
 ### Nomor 3
