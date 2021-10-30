@@ -349,8 +349,68 @@ Listen 15500
 ```
 ### Nomor 15
 dengan autentikasi username luffy dan password onepiece dan file di /var/www/general.mecha.franky.yyy  
+* tambahkan konfigurasi pada ```/etc/apache2/sites-available/000-default.conf``` di Skypie
+```
+	<Directory /var/www/general.franky.A16.com>
+                Options +FollowSymLinks -Multiviews
+                AllowOverride All
+                Require all granted
+        </Directory>
+```
+* buat file .htaccess pada ```/var/www/general.franky.A16.com``` lalu tambahkan konfigurasi berikut
+```
+AuthType Basic
+AuthName "Restricted Content"
+AuthUserFile /var/www/general.franky.A16.com/.htpasswd
+Require valid-user
+```
+* kemudian buat file .htpasswd untuk menyimpan username dan password
+```
+htpasswd -c -b /var/www/general.franky.A16.com/.htpasswd luffy onepiece
+```
 ### Nomor 16
 Dan setiap kali mengakses IP Skypie akan dialihkan secara otomatis ke www.franky.yyy.com  
+* tambahkan konfigurasi pada ```/etc/apache2/sites-available/000-default.conf``` di Skypie
+```
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/franky.A16.com
+        ServerName http://10.7.2.4
+
+        Redirect 301 / http://www.franky.A16.com/
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
 ### Nomor 17
-Dikarenakan Franky juga ingin mengajak temannya untuk dapat menghubunginya melalui website www.super.franky.yyy.com, dan dikarenakan pengunjung web server pasti akan bingung dengan randomnya images yang ada, maka Franky juga meminta untuk mengganti request gambar yang memiliki substring “franky” akan diarahkan menuju franky.png. Maka bantulah Luffy untuk membuat konfigurasi dns dan web server ini!  
+Dikarenakan Franky juga ingin mengajak temannya untuk dapat menghubunginya melalui website www.super.franky.yyy.com, dan dikarenakan pengunjung web server pasti akan bingung dengan randomnya images yang ada, maka Franky juga meminta untuk mengganti request gambar yang memiliki substring “franky” akan diarahkan menuju franky.png. Maka bantulah Luffy untuk membuat konfigurasi dns dan web server ini!
+* tambahkan konfigurasi pada ```/etc/apache2/sites-available/000-default.conf``` di Skypie
+```
+	<Directory /var/www/super.franky.A16.com>
+                Options +FollowSymLinks -Multiviews
+                AllowOverride All
+        </Directory>
+```
+* tambahkan konfigurasi pada ```/var/www/super.franky.A16.com/.htaccess``` pada Skypie
+```
+	RewriteEngine On
+	RewriteBase /var/www/super.franky.A16.com/public/images/
+	RewriteCond %{REQUEST_FILENAME} !franky.png
+	RewriteRule ^public/images/.*franky.*/png$ public/images/franky.png
+```
+## Catatan
+* Setiap perubahan konfigurasi dilakukan restart apache pada web server dan bind9 pada dns server
+restart apache2
+```
+service apache2 restart
+```
+restart bind9
+```
+service bind9 restart
+```
+* Setiap memerlukan module rewrite lakukan
+```
+a2enmod rewrite
+```
 ## Kendala
